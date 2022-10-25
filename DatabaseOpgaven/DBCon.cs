@@ -20,30 +20,30 @@ namespace DatabaseOpgaven
             SqlCommand command = new SqlCommand(queryStringMaxHotelNo, connection);
             SqlDataReader reader = command.ExecuteReader();
 
-            int MaxHotel_No = 0;
+            int MaxHotelNo = 0;
 
             if (reader.Read())
             {
-                MaxHotel_No = reader.GetInt32(0); 
+                MaxHotelNo = reader.GetInt32(0); 
             }
 
             reader.Close();
 
-            Console.WriteLine($"Max hotel#: {MaxHotel_No}");
+            Console.WriteLine($"Max hotel#: {MaxHotelNo}");
             Console.WriteLine();
 
-            return MaxHotel_No;
+            return MaxHotelNo;
         }
 
-        private int DeleteHotel(SqlConnection connection, int hotel_no)
+        private int DeleteHotel(SqlConnection connection, int hotelNo)
         {
             Console.WriteLine("Calling -> DeleteHotel");
 
-            string deleteCommandString = $"DELETE FROM DemoHotel  WHERE Hotel_No = {hotel_no}";
+            string deleteCommandString = $"DELETE FROM DemoHotel  WHERE Hotel_No = {hotelNo}";
             Console.WriteLine($"SQL applied: {deleteCommandString}");
 
             SqlCommand command = new SqlCommand(deleteCommandString, connection);
-            Console.WriteLine($"Deleting hotel #{hotel_no}");
+            Console.WriteLine($"Deleting hotel #{hotelNo}");
             int numberOfRowsAffected = command.ExecuteNonQuery();
 
             Console.WriteLine($"Number of rows affected: {numberOfRowsAffected}");
@@ -52,15 +52,15 @@ namespace DatabaseOpgaven
             return numberOfRowsAffected;
         }
 
-        private int UpdateHotel(SqlConnection connection, DBCon hotel)
+        private int UpdateHotel(SqlConnection connection, Hotel hotel)
         {
             Console.WriteLine("Calling -> UpdateHotel");
 
-            string updateCommandString = $"UPDATE DemoHotel SET Name='{hotel.Name}', Address='{hotel.Address}' WHERE Hotel_No = {hotel.Hotel_No}";
+            string updateCommandString = $"UPDATE DemoHotel SET Name='{hotel.Name}', Address='{hotel.Address}' WHERE Hotel_No = {hotel.HotelNo}";
             Console.WriteLine($"SQL applied: {updateCommandString}");
 
             SqlCommand command = new SqlCommand(updateCommandString, connection);
-            Console.WriteLine($"Updating hotel #{hotel.Hotel_No}");
+            Console.WriteLine($"Updating hotel #{hotel.HotelNo}");
             int numberOfRowsAffected = command.ExecuteNonQuery();
 
             Console.WriteLine($"Number of rows affected: {numberOfRowsAffected}");
@@ -69,16 +69,16 @@ namespace DatabaseOpgaven
             return numberOfRowsAffected;
         }
 
-        private int InsertHotel(SqlConnection connection, DBCon hotel)
+        private int InsertHotel(SqlConnection connection, Hotel hotel)
         {
             Console.WriteLine("Calling -> InsertHotel");
 
-            string insertCommandString = $"INSERT INTO DemoHotel VALUES({hotel.Hotel_No}, '{hotel.Name}', '{hotel.Address}')";
+            string insertCommandString = $"INSERT INTO DemoHotel VALUES({hotel.HotelNo}, '{hotel.Name}', '{hotel.Address}')";
             Console.WriteLine($"SQL applied: {insertCommandString}");
 
             SqlCommand command = new SqlCommand(insertCommandString, connection);
 
-            Console.WriteLine($"Creating hotel #{hotel.Hotel_No}");
+            Console.WriteLine($"Creating hotel #{hotel.HotelNo}");
             int numberOfRowsAffected = command.ExecuteNonQuery();
 
             Console.WriteLine($"Number of rows affected: {numberOfRowsAffected}");
@@ -87,7 +87,7 @@ namespace DatabaseOpgaven
             return numberOfRowsAffected;
         }
 
-        private List<DBCon> ListAllHotels(SqlConnection connection)
+        private List<Hotel> ListAllHotels(SqlConnection connection)
         {
             Console.WriteLine("Calling -> ListAllHotels");
 
@@ -107,12 +107,12 @@ namespace DatabaseOpgaven
                 return null;
             }
 
-            List<DBCon> hotels = new List<DBCon>();
+            List<Hotel> hotels = new List<Hotel>();
             while (reader.Read())
             {
-                DBCon nextHotel = new DBCon()
+                Hotel nextHotel = new Hotel()
                 {
-                    Hotel_No = reader.GetInt32(0), 
+                    HotelNo = reader.GetInt32(0), 
                     Name = reader.GetString(1),    
                     Address = reader.GetString(2)  
                 };
@@ -128,17 +128,17 @@ namespace DatabaseOpgaven
             return hotels;
         }
 
-        private DBCon GetHotel(SqlConnection connection, int hotel_no)
+        private Hotel GetHotel(SqlConnection connection, int hotelNo)
         {
             Console.WriteLine("Calling -> GetHotel");
 
-            string queryStringOneHotel = $"SELECT * FROM DemoHotel WHERE hotel_no = {hotel_no}";
+            string queryStringOneHotel = $"SELECT * FROM DemoHotel WHERE hotel_no = {hotelNo}";
             Console.WriteLine($"SQL applied: {queryStringOneHotel}");
 
             SqlCommand command = new SqlCommand(queryStringOneHotel, connection);
             SqlDataReader reader = command.ExecuteReader();
 
-            Console.WriteLine($"Finding hotel#: {hotel_no}");
+            Console.WriteLine($"Finding hotel#: {hotelNo}");
 
             if (!reader.HasRows)
             {
@@ -148,12 +148,12 @@ namespace DatabaseOpgaven
                 return null;
             }
 
-            DBCon hotel = null;
+            Hotel hotel = null;
             if (reader.Read())
             {
-                hotel = new DBCon()
+                hotel = new Hotel()
                 {
-                    Hotel_No = reader.GetInt32(0), 
+                    HotelNo = reader.GetInt32(0), 
                     Name = reader.GetString(1),    
                     Address = reader.GetString(2)  
                 };
@@ -174,9 +174,9 @@ namespace DatabaseOpgaven
 
                 ListAllHotels(connection);
 
-                DBCon newHotel = new DBCon()
+                Hotel newHotel = new Hotel()
                 {
-                    Hotel_No = GetMaxHotelNo(connection) + 1,
+                    HotelNo = GetMaxHotelNo(connection) + 1,
                     Name = "New Hotel",
                     Address = "Maglegaardsvej 2, 4000 Roskilde"
                 };
@@ -184,7 +184,7 @@ namespace DatabaseOpgaven
                 InsertHotel(connection, newHotel);
                 ListAllHotels(connection);
 
-                DBCon hotelToBeUpdated = GetHotel(connection, newHotel.Hotel_No);
+                Hotel hotelToBeUpdated = GetHotel(connection, newHotel.HotelNo);
 
                 hotelToBeUpdated.Name += "(updated)";
                 hotelToBeUpdated.Address += "(updated)";
@@ -193,9 +193,9 @@ namespace DatabaseOpgaven
 
                 ListAllHotels(connection);
 
-                DBCon hotelToBeDeleted = GetHotel(connection, hotelToBeUpdated.Hotel_No);
+                Hotel hotelToBeDeleted = GetHotel(connection, hotelToBeUpdated.HotelNo);
 
-                DeleteHotel(connection, hotelToBeDeleted.Hotel_No);
+                DeleteHotel(connection, hotelToBeDeleted.HotelNo);
 
                 ListAllHotels(connection);
             }
