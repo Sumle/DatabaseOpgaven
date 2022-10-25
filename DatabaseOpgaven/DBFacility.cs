@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace DatabaseOpgaven
 {
-    class DBCon
+    class DBFacility
     {
         string connectionString = @".....";
         private int GetMaxHotelNo(SqlConnection connection)
