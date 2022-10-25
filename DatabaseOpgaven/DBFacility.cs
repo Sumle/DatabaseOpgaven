@@ -14,7 +14,7 @@ namespace DatabaseOpgaven
         {
             Console.WriteLine("Calling -> GetMaxHotelNo");
 
-            string queryStringMaxHotelNo = "SELECT  MAX(Hotel_No)  FROM DemoHotel";
+            string queryStringMaxHotelNo = "SELECT  MAX(HotelNo)  FROM DemoHotel";
             Console.WriteLine($"SQL applied: {queryStringMaxHotelNo}");
 
             SqlCommand command = new SqlCommand(queryStringMaxHotelNo, connection);
@@ -39,7 +39,7 @@ namespace DatabaseOpgaven
         {
             Console.WriteLine("Calling -> DeleteHotel");
 
-            string deleteCommandString = $"DELETE FROM DemoHotel  WHERE Hotel_No = {hotelNo}";
+            string deleteCommandString = $"DELETE FROM DemoHotel  WHERE HotelNo = {hotelNo}";
             Console.WriteLine($"SQL applied: {deleteCommandString}");
 
             SqlCommand command = new SqlCommand(deleteCommandString, connection);
@@ -56,7 +56,7 @@ namespace DatabaseOpgaven
         {
             Console.WriteLine("Calling -> UpdateHotel");
 
-            string updateCommandString = $"UPDATE DemoHotel SET Name='{hotel.Name}', Address='{hotel.Address}' WHERE Hotel_No = {hotel.HotelNo}";
+            string updateCommandString = $"UPDATE DemoHotel SET Name='{hotel.Name}', Address='{hotel.Address}' WHERE HotelNo = {hotel.HotelNo}";
             Console.WriteLine($"SQL applied: {updateCommandString}");
 
             SqlCommand command = new SqlCommand(updateCommandString, connection);
@@ -132,7 +132,7 @@ namespace DatabaseOpgaven
         {
             Console.WriteLine("Calling -> GetHotel");
 
-            string queryStringOneHotel = $"SELECT * FROM DemoHotel WHERE hotel_no = {hotelNo}";
+            string queryStringOneHotel = $"SELECT * FROM DemoHotel WHERE hotelno = {hotelNo}";
             Console.WriteLine($"SQL applied: {queryStringOneHotel}");
 
             SqlCommand command = new SqlCommand(queryStringOneHotel, connection);
