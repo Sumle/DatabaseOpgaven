@@ -1,5 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using DatabaseOpgaven;
 
-DBFacility DBC = new DBFacility();
+DBClient DBC = new DBClient();
 DBC.Start();
