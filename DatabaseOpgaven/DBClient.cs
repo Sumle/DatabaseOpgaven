@@ -407,17 +407,17 @@ namespace DatabaseOpgaven
             return numberOfRowsAffected;
         }
 
-        private int UpdateFacilityHotel(SqlConnection connection, FacilityHotel FacilityHotel)
+        private int UpdateFacilityHotel(SqlConnection connection, FacilityHotel newFacilityHotel, FacilityHotel oldFacilityHotel)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Calling -> UpdateFacilityHotel");
             Console.ResetColor();
 
-            string updateCommandString = $"UPDATE DemoFacilityHotel SET FacilityNo = {FacilityHotel.FacilityNo} & Hotel_No {FacilityHotel.Hotel_No}";
+            string updateCommandString = $"UPDATE DemoFacilityHotel SET FacilityNo = '{newFacilityHotel.FacilityNo}', Hotel_No '{newFacilityHotel.Hotel_No}' WHERE FacilityNo = {oldFacilityHotel.FacilityNo} and Hotel_No = {oldFacilityHotel.Hotel_No}";
             Console.WriteLine($"SQL applied: {updateCommandString}");
 
             SqlCommand command = new SqlCommand(updateCommandString, connection);
-            Console.WriteLine($"Updating Facility and Hotel #{FacilityHotel.FacilityNo}, {FacilityHotel.Hotel_No}");
+            Console.WriteLine($"Updating FacilityHotel. Facilitet: #{oldFacilityHotel.FacilityNo}, Hotel: {oldFacilityHotel.Hotel_No}");
             int numberOfRowsAffected = command.ExecuteNonQuery();
 
             Console.WriteLine($"Number of rows affected: {numberOfRowsAffected}");
@@ -520,7 +520,7 @@ namespace DatabaseOpgaven
                 FacilityHotel = new FacilityHotel()
                 {
                     FacilityNo = reader.GetInt32(0),
-                    Hotel_No = reader.GetInt32(0)
+                    Hotel_No = reader.GetInt32(1)
                 };
 
                 Console.WriteLine(FacilityHotel);
@@ -608,23 +608,23 @@ namespace DatabaseOpgaven
                 FacilityHotel newFacilityHotel = new FacilityHotel()
                 {
                     //FacilityHotelNo = GetMaxFacilityHotelNo(connection) + 1,
-                    Hotel_No = 1,
-                    FacilityNo = 1
+                    FacilityNo = 3,
+                    Hotel_No = 4
                 };
 
                 InsertFacilityHotel(connection, newFacilityHotel);
 
                 ListAllFacilitysAndHotels(connection);
 
-                FacilityHotel FacilityHotelToBeUpdated = GetFacilityHotel(connection, newFacilityHotel.FacilityNo, newFacilityHotel.Hotel_No);
+                FacilityHotel Updated = newFacilityHotel;
 
-                FacilityHotelToBeUpdated.FacilityNo += +1;
+                Updated.Hotel_No = 5;
 
-                UpdateFacilityHotel(connection, FacilityHotelToBeUpdated);
+                UpdateFacilityHotel(connection, Updated, newFacilityHotel);
 
                 ListAllFacilitysAndHotels(connection);
 
-                FacilityHotel FacilityHotelToBeDeleted = GetFacilityHotel(connection, FacilityHotelToBeUpdated.FacilityNo, FacilityHotelToBeUpdated.Hotel_No);
+                FacilityHotel FacilityHotelToBeDeleted = GetFacilityHotel(connection, newFacilityHotel.FacilityNo, newFacilityHotel.Hotel_No);
 
                 DeleteFacilityHotel(connection, FacilityHotelToBeDeleted.FacilityNo, FacilityHotelToBeDeleted.Hotel_No);
 
