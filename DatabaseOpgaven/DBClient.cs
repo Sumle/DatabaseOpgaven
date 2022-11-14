@@ -375,7 +375,7 @@ namespace DatabaseOpgaven
         {
             Console.WriteLine("Calling -> UpdateFacilityHotel");
 
-            string updateCommandString = $"UPDATE DemoFacilityHotel WHERE FacilityNo = {FacilityHotel.FacilityNo} AND Hotel_No {FacilityHotel.Hotel_No}";
+            string updateCommandString = $"UPDATE DemoFacilityHotel WHERE FacilityNo = {FacilityHotel.FacilityNo} & Hotel_No {FacilityHotel.Hotel_No}";
             Console.WriteLine($"SQL applied: {updateCommandString}");
 
             SqlCommand command = new SqlCommand(updateCommandString, connection);
@@ -392,7 +392,7 @@ namespace DatabaseOpgaven
         {
             Console.WriteLine("Calling -> InsertFacilityHotel");
 
-            string insertCommandString = $"INSERT INTO DemoFacilityHotel VALUES({FacilityHotel.FacilityNo} {FacilityHotel.Hotel_No})";
+            string insertCommandString = $"INSERT INTO DemoFacilityHotel VALUES({FacilityHotel.FacilityNo}, '{FacilityHotel.Hotel_No}')";
             Console.WriteLine($"SQL applied: {insertCommandString}");
 
             SqlCommand command = new SqlCommand(insertCommandString, connection);
@@ -559,8 +559,8 @@ namespace DatabaseOpgaven
 
                 FacilityHotel newFacilityHotel = new FacilityHotel()
                 {
-                    FacilityNo = GetMaxFacilityHotelNo(connection) + 1,
-                    Hotel_No = GetMaxFacilityHotelNo(connection) + 1,
+                    FacilityNo = GetMaxFacilityHotelNo(connection) + 4,
+                    Hotel_No = GetMaxFacilityHotelNo(connection) + 3,
                 };
 
                 InsertFacilityHotel(connection, newFacilityHotel);
@@ -569,15 +569,15 @@ namespace DatabaseOpgaven
 
                 FacilityHotel FacilityHotelToBeUpdated = GetFacilityHotel(connection, GetMaxFacilityHotelNo(connection), GetMaxFacilityHotelNo(connection));
 
-                FacilityHotelToBeUpdated.FacilityNo += +1;
+                //FacilityHotelToBeUpdated.FacilityNo += +1;
 
                 UpdateFacilityHotel(connection, FacilityHotelToBeUpdated);
 
                 ListAllFacilitysAndHotels(connection);
 
-                FacilityHotel FacilityToBeDeleted = GetFacilityHotel(connection, FacilityHotelToBeUpdated.FacilityNo, FacilityHotelToBeUpdated.Hotel_No);
+                FacilityHotel FacilityHotelToBeDeleted = GetFacilityHotel(connection, FacilityHotelToBeUpdated.FacilityNo, FacilityHotelToBeUpdated.Hotel_No);
 
-                DeleteFacility(connection, FacilityToBeDeleted.FacilityNo);
+                DeleteFacilityHotel(connection, FacilityHotelToBeDeleted.FacilityNo, FacilityHotelToBeDeleted.Hotel_No);
 
                 ListAllFacilitysAndHotels(connection);
 
