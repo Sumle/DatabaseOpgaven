@@ -13,6 +13,8 @@ namespace DatabaseOpgaven
 
         public int Hotel_No { get; set; }
 
+        public string Floor { get; set; }
+
         public override string ToString()
         {
             return $"ID: {FacilityNo}, ID: {Hotel_No}";

@@ -40,17 +40,17 @@ namespace DatabaseOpgaven
             return MaxHotelNo;
         }
 
-        private int DeleteHotel(SqlConnection connection, int hotelNo)
+        private int DeleteHotel(SqlConnection connection, int hotel_No)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Calling -> DeleteHotel");
             Console.ResetColor();
 
-            string deleteCommandString = $"DELETE FROM DemoHotel  WHERE Hotel_No = {hotelNo}";
+            string deleteCommandString = $"DELETE FROM DemoHotel  WHERE Hotel_No = {hotel_No}";
             Console.WriteLine($"SQL applied: {deleteCommandString}");
 
             SqlCommand command = new SqlCommand(deleteCommandString, connection);
-            Console.WriteLine($"Deleting hotel #{hotelNo}");
+            Console.WriteLine($"Deleting hotel #{hotel_No}");
             int numberOfRowsAffected = command.ExecuteNonQuery();
 
             Console.WriteLine($"Number of rows affected: {numberOfRowsAffected}");
@@ -65,11 +65,11 @@ namespace DatabaseOpgaven
             Console.WriteLine("Calling -> UpdateHotel");
             Console.ResetColor();
 
-            string updateCommandString = $"UPDATE DemoHotel SET Name='{hotel.Name}', Address='{hotel.Address}' WHERE Hotel_No = {hotel.HotelNo}";
+            string updateCommandString = $"UPDATE DemoHotel SET Name='{hotel.Name}', Address='{hotel.Address}' WHERE Hotel_No = {hotel.Hotel_No}";
             Console.WriteLine($"SQL applied: {updateCommandString}");
 
             SqlCommand command = new SqlCommand(updateCommandString, connection);
-            Console.WriteLine($"Updating hotel #{hotel.HotelNo}");
+            Console.WriteLine($"Updating hotel #{hotel.Hotel_No}");
             int numberOfRowsAffected = command.ExecuteNonQuery();
 
             Console.WriteLine($"Number of rows affected: {numberOfRowsAffected}");
@@ -84,12 +84,12 @@ namespace DatabaseOpgaven
             Console.WriteLine("Calling -> InsertHotel");
             Console.ResetColor();
 
-            string insertCommandString = $"INSERT INTO DemoHotel VALUES({hotel.HotelNo}, '{hotel.Name}', '{hotel.Address}')";
+            string insertCommandString = $"INSERT INTO DemoHotel VALUES({hotel.Hotel_No}, '{hotel.Name}', '{hotel.Address}')";
             Console.WriteLine($"SQL applied: {insertCommandString}");
 
             SqlCommand command = new SqlCommand(insertCommandString, connection);
 
-            Console.WriteLine($"Creating hotel #{hotel.HotelNo}");
+            Console.WriteLine($"Creating hotel #{hotel.Hotel_No}");
             int numberOfRowsAffected = command.ExecuteNonQuery();
 
             Console.WriteLine($"Number of rows affected: {numberOfRowsAffected}");
@@ -127,7 +127,7 @@ namespace DatabaseOpgaven
             {
                 Hotel nextHotel = new Hotel()
                 {
-                    HotelNo = reader.GetInt32(0), 
+                    Hotel_No = reader.GetInt32(0), 
                     Name = reader.GetString(1),    
                     Address = reader.GetString(2)  
                 };
@@ -143,19 +143,19 @@ namespace DatabaseOpgaven
             return hotels;
         }
 
-        private Hotel GetHotel(SqlConnection connection, int hotelNo)
+        private Hotel GetHotel(SqlConnection connection, int hotel_No)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Calling -> GetHotel");
             Console.ResetColor();
 
-            string queryStringOneHotel = $"SELECT * FROM DemoHotel WHERE hotel_No = {hotelNo}";
+            string queryStringOneHotel = $"SELECT * FROM DemoHotel WHERE hotel_No = {hotel_No}";
             Console.WriteLine($"SQL applied: {queryStringOneHotel}");
 
             SqlCommand command = new SqlCommand(queryStringOneHotel, connection);
             SqlDataReader reader = command.ExecuteReader();
 
-            Console.WriteLine($"Finding hotel#: {hotelNo}");
+            Console.WriteLine($"Finding hotel#: {hotel_No}");
 
             if (!reader.HasRows)
             {
@@ -172,7 +172,7 @@ namespace DatabaseOpgaven
             {
                 hotel = new Hotel()
                 {
-                    HotelNo = reader.GetInt32(0), 
+                    Hotel_No = reader.GetInt32(0), 
                     Name = reader.GetString(1),    
                     Address = reader.GetString(2)  
                 };
@@ -361,44 +361,17 @@ namespace DatabaseOpgaven
         #endregion
 
         #region CRUD Methods FacilityHotel
-        private int GetMaxFacilityHotelNo(SqlConnection connection)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Calling -> GetMaxFacilityHotelNo");
-            Console.ResetColor();
-
-            string queryStringMaxFacilityHotelNo = "SELECT  MAX(FacilityNo) & MAX(Hotel_No) FROM DemoFacilityHotel";
-            Console.WriteLine($"SQL applied: {queryStringMaxFacilityHotelNo}");
-
-            SqlCommand command = new SqlCommand(queryStringMaxFacilityHotelNo, connection);
-            SqlDataReader reader = command.ExecuteReader();
-
-            int MaxFacilityHotelNo = 0;
-
-            if (reader.Read())
-            {
-                MaxFacilityHotelNo = reader.GetInt32(0);
-            }
-
-            reader.Close();
-
-            Console.WriteLine($"Max Facility and Hotel: {MaxFacilityHotelNo}");
-            Console.WriteLine();
-
-            return MaxFacilityHotelNo;
-        }
-
-        private int DeleteFacilityHotel(SqlConnection connection, int FacilityNo, int Hotel_No)
+        private int DeleteFacilityHotel(SqlConnection connection, int facilityNo, int hotel_No)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Calling -> DeleteFacilityHotel");
             Console.ResetColor();
 
-            string deleteCommandString = $"DELETE FROM DemoFacilityHotel  WHERE FacilityNo = {FacilityNo} AND Hotel_No = {Hotel_No}";
+            string deleteCommandString = $"DELETE FROM DemoFacilityHotel WHERE FacilityNo = {facilityNo} AND Hotel_No = {hotel_No}";
             Console.WriteLine($"SQL applied: {deleteCommandString}");
 
             SqlCommand command = new SqlCommand(deleteCommandString, connection);
-            Console.WriteLine($"Deleting FacilityHotel #{FacilityNo}, {Hotel_No}");
+            Console.WriteLine($"Deleting FacilityHotel facility: #{facilityNo}, hotel: {hotel_No}");
             int numberOfRowsAffected = command.ExecuteNonQuery();
 
             Console.WriteLine($"Number of rows affected: {numberOfRowsAffected}");
@@ -407,17 +380,17 @@ namespace DatabaseOpgaven
             return numberOfRowsAffected;
         }
 
-        private int UpdateFacilityHotel(SqlConnection connection, FacilityHotel newFacilityHotel, FacilityHotel oldFacilityHotel)
+        private int UpdateFacilityHotel(SqlConnection connection, FacilityHotel facilityHotel)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Calling -> UpdateFacilityHotel");
             Console.ResetColor();
 
-            string updateCommandString = $"UPDATE DemoFacilityHotel SET FacilityNo = '{newFacilityHotel.FacilityNo}', Hotel_No '{newFacilityHotel.Hotel_No}' WHERE FacilityNo = {oldFacilityHotel.FacilityNo} and Hotel_No = {oldFacilityHotel.Hotel_No}";
+            string updateCommandString = $"UPDATE DemoFacilityHotel SET FacilityNo = '{facilityHotel.FacilityNo}', Hotel_No = '{facilityHotel.Hotel_No}', Floor = '{facilityHotel.Floor}' WHERE FacilityNo = {facilityHotel.FacilityNo} and Hotel_No = {facilityHotel.Hotel_No}";
             Console.WriteLine($"SQL applied: {updateCommandString}");
 
             SqlCommand command = new SqlCommand(updateCommandString, connection);
-            Console.WriteLine($"Updating FacilityHotel. Facilitet: #{oldFacilityHotel.FacilityNo}, Hotel: {oldFacilityHotel.Hotel_No}");
+            Console.WriteLine($"Updating FacilityHotel. Facility: #{facilityHotel.FacilityNo}, hotel: {facilityHotel.Hotel_No}, {facilityHotel.Floor}");
             int numberOfRowsAffected = command.ExecuteNonQuery();
 
             Console.WriteLine($"Number of rows affected: {numberOfRowsAffected}");
@@ -432,7 +405,7 @@ namespace DatabaseOpgaven
             Console.WriteLine("Calling -> InsertFacilityHotel");
             Console.ResetColor();
 
-            string insertCommandString = $"INSERT INTO DemoFacilityHotel VALUES('{FacilityHotel.FacilityNo}', '{FacilityHotel.Hotel_No}')";
+            string insertCommandString = $"INSERT INTO DemoFacilityHotel VALUES('{FacilityHotel.FacilityNo}', '{FacilityHotel.Hotel_No}', '{FacilityHotel.Floor}')";
             Console.WriteLine($"SQL applied: {insertCommandString}");
 
             SqlCommand command = new SqlCommand(insertCommandString, connection);
@@ -476,7 +449,8 @@ namespace DatabaseOpgaven
                 FacilityHotel nextFacilityHotel = new FacilityHotel()
                 {
                     FacilityNo = reader.GetInt32(0),
-                    Hotel_No = reader.GetInt32(0)
+                    Hotel_No = reader.GetInt32(1),
+                    Floor = reader.GetString(2)
                 };
 
                 FacilityHotels.Add(nextFacilityHotel);
@@ -502,7 +476,7 @@ namespace DatabaseOpgaven
             SqlCommand command = new SqlCommand(queryStringOneFacilityHotel, connection);
             SqlDataReader reader = command.ExecuteReader();
 
-            Console.WriteLine($"Finding Facility and Hotel #: {FacilityNo}, {Hotel_No}");
+            Console.WriteLine($"Finding FacilityHotel #: FacilityNo: {FacilityNo}, HotelNo: {Hotel_No}");
 
             if (!reader.HasRows)
             {
@@ -520,7 +494,8 @@ namespace DatabaseOpgaven
                 FacilityHotel = new FacilityHotel()
                 {
                     FacilityNo = reader.GetInt32(0),
-                    Hotel_No = reader.GetInt32(1)
+                    Hotel_No = reader.GetInt32(1),
+                    Floor = reader.GetString(2)
                 };
 
                 Console.WriteLine(FacilityHotel);
@@ -544,7 +519,7 @@ namespace DatabaseOpgaven
 
                 Hotel newHotel = new Hotel()
                 {
-                    HotelNo = GetMaxHotelNo(connection) + 1,
+                    Hotel_No = GetMaxHotelNo(connection) + 1,
                     Name = "New Hotel",
                     Address = "Maglegaardsvej 2, 4000 Roskilde"
                 };
@@ -552,7 +527,7 @@ namespace DatabaseOpgaven
                 InsertHotel(connection, newHotel);
                 ListAllHotels(connection);
 
-                Hotel hotelToBeUpdated = GetHotel(connection, newHotel.HotelNo);
+                Hotel hotelToBeUpdated = GetHotel(connection, newHotel.Hotel_No);
 
                 hotelToBeUpdated.Name += "(updated)";
                 hotelToBeUpdated.Address += "(updated)";
@@ -561,9 +536,9 @@ namespace DatabaseOpgaven
 
                 ListAllHotels(connection);
 
-                Hotel hotelToBeDeleted = GetHotel(connection, hotelToBeUpdated.HotelNo);
+                Hotel hotelToBeDeleted = GetHotel(connection, hotelToBeUpdated.Hotel_No);
 
-                DeleteHotel(connection, hotelToBeDeleted.HotelNo);
+                DeleteHotel(connection, hotelToBeDeleted.Hotel_No);
 
                 ListAllHotels(connection);
             }
@@ -607,20 +582,20 @@ namespace DatabaseOpgaven
 
                 FacilityHotel newFacilityHotel = new FacilityHotel()
                 {
-                    //FacilityHotelNo = GetMaxFacilityHotelNo(connection) + 1,
-                    FacilityNo = 3,
-                    Hotel_No = 4
+                    FacilityNo =  3,
+                    Hotel_No = 5,
+                    Floor = "43th floor"
                 };
 
                 InsertFacilityHotel(connection, newFacilityHotel);
 
                 ListAllFacilitysAndHotels(connection);
 
-                FacilityHotel Updated = newFacilityHotel;
+                FacilityHotel FacilityHotelToBeUpdated = GetFacilityHotel(connection, newFacilityHotel.FacilityNo, newFacilityHotel.Hotel_No);
 
-                Updated.Hotel_No = 5;
+                FacilityHotelToBeUpdated.Floor += "(updated)";
 
-                UpdateFacilityHotel(connection, Updated, newFacilityHotel);
+                UpdateFacilityHotel(connection, FacilityHotelToBeUpdated);
 
                 ListAllFacilitysAndHotels(connection);
 
